@@ -16,7 +16,9 @@ public class FirstCompressionMethod {
         int maxOneBit = Integer.SIZE - Integer.numberOfLeadingZeros(max(ints));
         Writter.info_log("\nnumberOfTrailingZeros of the Highest Number is positionned as bit N°" + maxOneBit);
 
-        //bits = new BitSet(32);
+        //@TODO : Représenter les entiers de 'ints' en chaine de maxOneBit dans un array d'entier (Ex : 3 = [00101], ainsi de suite)
+
+        //@TODO : Construire un tableau de paquets de 32 Bits avec l'appel de la classe ThirtyTwoBitSets
 
 
     }
