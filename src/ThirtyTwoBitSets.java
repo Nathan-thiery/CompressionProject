@@ -28,7 +28,7 @@ public class ThirtyTwoBitSets {
             if(32 % CompressedBitSize != 0){
                 int lastIntegerOffset = 32 - (32%CompressedBitSize);
                 Writter.finest_log("\t[" + lastIntegerOffset + "] out of [32] bytes CAN be used in paquet [" + actualNbBitSet + "].");
-                Writter.finest_log("\t[" + ints.length + "] out of [32] bytes WILL be used in paquet [" + actualNbBitSet + "].");
+                Writter.finest_log("\t[" + ((ints.length - (32 * actualNbBitSet))>lastIntegerOffset ? lastIntegerOffset : ints.length - (32 * actualNbBitSet)) + "] out of [32] bytes WILL be used in paquet [" + actualNbBitSet + "].");
                 for(i=0 ; i < lastIntegerOffset && (i + (31 * actualNbBitSet)) < ints.length; i++){
                     Writter.finest_log("\t\tPaquet["+actualNbBitSet+"]["+(31-i)+"] = [" + ints[i+(31*actualNbBitSet)] + "]");
                     bs[actualNbBitSet].set(31 - i, ints[i + (31*actualNbBitSet)] != 0);
@@ -46,12 +46,23 @@ public class ThirtyTwoBitSets {
         }
 
         Writter.info_log("End of the creation of [" + lastNbBitSet + "] paquet(s) of 32 Bytes.");
+
+
         for(i=0; i < lastNbBitSet ; i++){
-            Writter.fine_log("Paquet[" + i + "] - 32 Bytes");
-                Writter.finer_log("\t>" + bs[i].toString());
+            Writter.fine_log("\n\tPaquet[" + i + "] - 32 Bytes");
+                Writter.finer_log("\t\t> 1 2 3 4 5 6 7 8 9 1 1 2 3 4 5 6 7 8 9 2 1 2 3 4 5 6 7 8 9 3 1 2");
+                Writter.finer_log("\t\t> " + bitSetToString(bs[i], 31));
         }
 
 
+    }
+
+    public static String bitSetToString(BitSet bs, int size) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = size; i >= 0; i--) {
+            sb.append(bs.get(i) ? "1 " : "0 ");
+        }
+        return sb.toString();
     }
 
     private int divArrondiSup(int num, int den){
