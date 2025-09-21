@@ -1,5 +1,6 @@
-import java.util.BitSet;
 
+
+/*
 
 public class FirstCompressionMethod {
     private ThirtyTwoBitSets paquetsOf32;
@@ -7,7 +8,7 @@ public class FirstCompressionMethod {
     public FirstCompressionMethod(int[] ints) {
         int i;
         // Espace commentaires
-        Writter.fine_log("Construction of FirstCompressionMethod class :");
+        Writter.fine_log("Construction of old.FirstCompressionMethod class :");
         for(i=0; i < ints.length ; i++){
             Writter.fine_log( "\tInteger [" + i + "] = {" + ints[i] + "}");
             Writter.finer_log("\t\t[" + String.format("%32s", Integer.toBinaryString(ints[i])).replace(' ', '0') + "]");
@@ -19,17 +20,17 @@ public class FirstCompressionMethod {
 
         //@TODO : Représenter les entiers de 'ints' en chaine de maxOneBit dans un array d'entier (Ex : 3 = [00101], ainsi de suite)
         int[] tabOfInts = extractRightBitsArray(ints, maxOneBit);
-        Writter.info_log("\nTableau créé pour être passé à ThirtyTwoBitSets");
+        Writter.info_log("\nTableau créé pour être passé à old.ThirtyTwoBitSets");
 
 
-        //@TODO : Construire un tableau de paquets de 32 Bits avec l'appel de la classe ThirtyTwoBitSets
+        //@TODO : Construire un tableau de paquets de 32 Bits avec l'appel de la classe old.ThirtyTwoBitSets
         paquetsOf32 = new ThirtyTwoBitSets(tabOfInts, maxOneBit);
 
     }
 
     public int max(int[] arr){
         if(arr == null || arr.length ==0){
-            Writter.warning_log("Integer Array given to FirstCompressionMethod is empty.");
+            Writter.warning_log("Integer Array given to old.FirstCompressionMethod is empty.");
             throw new IllegalArgumentException();
         }
 
@@ -57,3 +58,6 @@ public class FirstCompressionMethod {
 
 
 }
+
+
+ */

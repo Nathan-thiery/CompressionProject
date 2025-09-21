@@ -1,3 +1,4 @@
+
 public class Main {
 
     public static void main(String args[]){
@@ -10,13 +11,19 @@ public class Main {
             for (int i = 0; i < args.length; i++){
                 commandLineArgs[i] = Integer.parseInt(args[i]);
             }
-            FirstCompressionMethod compress1 = new FirstCompressionMethod(commandLineArgs);
+            // TODO : Remplacer par les méthodes des nouvelles classes
+            //FirstCompressionMethod compress1 = new FirstCompressionMethod(commandLineArgs);
 
         // Cas où l'utilisateur appelle le programme sans arguments
         }else{
+            IntegerArray info1 = new IntegerArray(new int[]{1, 2, 3, 4, 5});
+            FirstCompression compress1 = new FirstCompression();
+            compress1.compress(info1);
+            compress1.decompress(info1);
 
-            FirstCompressionMethod compress1 = new FirstCompressionMethod(new int[]{1, 2, 3, 4, 5});
-
+            IntegerArray info2 = new IntegerArray(new int[]{15, 24, 33, 2});
+            compress1.compress(info2);
+            compress1.get(2, info2);
         }
 
     }

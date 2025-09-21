@@ -1,3 +1,6 @@
+/*
+package old;
+
 import java.util.BitSet;
 
 public class ThirtyTwoBitSets {
@@ -69,3 +72,4 @@ public class ThirtyTwoBitSets {
         return (num + den -1) / den;
     }
 }
+*/
