@@ -1,27 +1,9 @@
-import java.util.HashMap;
+package Pkg_Logger;
 
-enum LogLevel {
-    SEVERE(7),
-    WARNING(6),
-    INFO(5),
-    CONFIG(4),
-    FINE(3),
-    FINER(2),
-    FINEST(1);
 
-    private final int priority;
-
-    LogLevel(int priority) {
-        this.priority = priority;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-}
 
 enum ANSI{
-    // Codes ANSI
+    // Codes Pkg_Logger.ANSI
     RESET("\u001B[0m"),
     ROUGE("\u001B[31m"),             // rouge de base
     ORANGE("\u001B[38;5;208m"),      // orange (palette 256 couleurs)

@@ -1,3 +1,11 @@
+package Pkg_Compression;
+
+import Pkg_Logger.Writter;
+import Pkg_Logger.LogLevel;
+import Pkg_MathsForCompression.CompressionMethods;
+import Pkg_MathsForCompression.CompressionMethods.*;
+
+
 // Compression method which can write a compressed form of one integer on 2 consecutiv integers.
 public class FirstCompression implements CompressionStrategy{
 
@@ -21,14 +29,14 @@ public class FirstCompression implements CompressionStrategy{
         }
 
         // Minimal number of bytes to represents each number given in the ints Array.
-        int minimalCompressedSize = Integer.SIZE - Integer.numberOfLeadingZeros(max(ints));
+        CompressionMethods CmprMthd = new CompressionMethods();
+        int minimalCompressedSize = Integer.SIZE - Integer.numberOfLeadingZeros(CmprMthd.max(ints));
         Writter.info_log("\nMinimal number of bytes to represent the highest number >" + minimalCompressedSize + "<\n");
 
         // Number of paquet of 32 Bytes to create in order to be able to stock every int
         final int lastNbBitSet ;
-        if(ints.length > 32){
-            lastNbBitSet = divArrondiSup((32 / minimalCompressedSize), (ints.length / minimalCompressedSize));
-        }else{lastNbBitSet = 1;}
+        lastNbBitSet = CmprMthd.divArrondiSup((ints.length * minimalCompressedSize), 32);
+
 
         Writter.info_log("Every number included in the Array given (of length " + ints.length + ") will be stocked in [" + lastNbBitSet + "] paquet(s) of 32 bytes.");
         int[] compressedInts = new int[lastNbBitSet];
@@ -46,9 +54,8 @@ public class FirstCompression implements CompressionStrategy{
         }
 
         // Logs again
-        String paquetValueString;
         for (i=0 ; i < compressedInts.length ; i++) {
-            Writter.info_log("\n\t > Paquet [" + i + "]/[" + (compressedInts.length -1) + "]" + "\n\t\t-- " + Integer.toBinaryString(compressedInts[i]) + " --");
+            Writter.info_log("\n\t > Paquet [" + i + "]/[" + (compressedInts.length -1) + "]" + "\n\t\t-- " + String.format("%32s", Integer.toBinaryString(compressedInts[i])).replace(' ', '0') + " --");
         }
 
         values.setValue(compressedInts);
@@ -60,7 +67,7 @@ public class FirstCompression implements CompressionStrategy{
         int[] compressedInts;
         int minimalByteSize;
 
-        // TODO : Vérifier si l'instanciation des variables agit comme une copie ou comme un lien direct vers l'objet IntegerArray donné en paramètre.
+        // TODO : Vérifier si l'instanciation des variables agit comme une copie ou comme un lien direct vers l'objet Pkg_Compression.IntegerArray donné en paramètre.
         compressedInts = values.getValue();
         minimalByteSize = values.getMinimalByteSize();
 
@@ -106,23 +113,5 @@ public class FirstCompression implements CompressionStrategy{
         return value;
     }
 
-    public int max(int[] arr){
-        if(arr == null || arr.length ==0){
-            Writter.warning_log("Integer Array given to old.FirstCompressionMethod is empty.");
-            throw new IllegalArgumentException();
-        }
-
-        int max = arr[0];
-        for(int i = 1 ; i < arr.length ; i ++){
-            if(arr[i] > max){
-                max = arr[i];
-            }
-        }
-        return max;
-    }
-
-    private int divArrondiSup(int num, int den){
-        return (num + den -1) / den;
-    }
 
 }

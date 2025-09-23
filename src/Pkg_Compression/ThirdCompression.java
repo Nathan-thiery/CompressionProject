@@ -1,3 +1,5 @@
+package Pkg_Compression;
+
 public class ThirdCompression implements CompressionStrategy{
 
     @Override

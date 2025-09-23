@@ -1,3 +1,8 @@
+import Pkg_Compression.*;
+import Pkg_Logger.LogLevel;
+import Pkg_Logger.Writter;
+
+import static Pkg_Compression.CompressionLevel.*;
 
 public class Main {
 
@@ -11,8 +16,9 @@ public class Main {
             for (int i = 0; i < args.length; i++){
                 commandLineArgs[i] = Integer.parseInt(args[i]);
             }
-            // TODO : Remplacer par les méthodes des nouvelles classes
-            //FirstCompressionMethod compress1 = new FirstCompressionMethod(commandLineArgs);
+            IntegerArray infoCommandLine = new IntegerArray(commandLineArgs);
+            CompressionFactory.getCompression(FIRST).compress(infoCommandLine);
+
 
         // Cas où l'utilisateur appelle le programme sans arguments
         }else{
@@ -24,6 +30,13 @@ public class Main {
             IntegerArray info2 = new IntegerArray(new int[]{15, 24, 33, 2});
             compress1.compress(info2);
             compress1.get(2, info2);
+
+            // En utilisant le CompressionFactory :
+            IntegerArray info3 = new IntegerArray(new int[]{123, 333, 432, 11123});
+            CompressionFactory.getCompression(FIRST).compress(info3);
+            CompressionFactory.getCompression(FIRST).get(3, info3);
+            CompressionFactory.getCompression(FIRST).decompress(info3);
+
         }
 
     }

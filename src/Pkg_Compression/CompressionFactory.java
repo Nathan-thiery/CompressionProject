@@ -1,9 +1,11 @@
+package Pkg_Compression;
+
 import java.util.HashMap;
 
 public class CompressionFactory {
-    private static final HashMap<CompressionType, CompressionStrategy> methods = new HashMap();
+    private static final HashMap<CompressionLevel, CompressionStrategy> methods = new HashMap();
 
-    public static CompressionStrategy getCompression(CompressionType type){
+    public static CompressionStrategy getCompression(CompressionLevel type){
         if(!methods.containsKey(type)){
             switch (type){
                 case FIRST :
@@ -22,8 +24,4 @@ public class CompressionFactory {
         return methods.get(type);
     }
 
-
-    public enum CompressionType {
-        FIRST, SECOND, THIRD
-    }
 }
