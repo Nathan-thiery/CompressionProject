@@ -37,6 +37,10 @@ public class Main {
             CompressionFactory.getCompression(FIRST).get(3, info3);
             CompressionFactory.getCompression(FIRST).decompress(info3);
 
+            CompressionFactory.getCompression(SECOND).compress(info3);
+            CompressionFactory.getCompression(SECOND).get(3, info3);
+            CompressionFactory.getCompression(SECOND).decompress(info3);
+
         }
 
     }

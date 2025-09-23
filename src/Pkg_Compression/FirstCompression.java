@@ -21,7 +21,7 @@ public class FirstCompression implements CompressionStrategy{
         ints = values.getValue();
 
         // Logs
-        Writter.fine_log("Compressing :");
+        Writter.info_log("\n\n\n\t\t\t[Compressing Using First Compression Method]");
         for(i=0; i < ints.length ; i++){
             Writter.fine_log( "\tInteger [" + i + "] = {" + ints[i] + "}");
             Writter.finer_log("\t\t[" + String.format("%32s", Integer.toBinaryString(ints[i])).replace(' ', '0') + "]");
@@ -31,14 +31,14 @@ public class FirstCompression implements CompressionStrategy{
         // Minimal number of bytes to represents each number given in the ints Array.
         CompressionMethods CmprMthd = new CompressionMethods();
         int minimalCompressedSize = Integer.SIZE - Integer.numberOfLeadingZeros(CmprMthd.max(ints));
-        Writter.info_log("\nMinimal number of bytes to represent the highest number >" + minimalCompressedSize + "<\n");
+        Writter.info_log("\n\t\t> Minimal number of bytes to represent the highest number >" + minimalCompressedSize + "<");
 
         // Number of paquet of 32 Bytes to create in order to be able to stock every int
         final int lastNbBitSet ;
         lastNbBitSet = CmprMthd.divArrondiSup((ints.length * minimalCompressedSize), 32);
 
 
-        Writter.info_log("Every number included in the Array given (of length " + ints.length + ") will be stocked in [" + lastNbBitSet + "] paquet(s) of 32 bytes.");
+        Writter.info_log("\t\t> Every number included in the Array given (of length " + ints.length + ") will be stocked in [" + lastNbBitSet + "] paquet(s) of 32 bytes.\n");
         int[] compressedInts = new int[lastNbBitSet];
 
         // Compression
@@ -55,8 +55,11 @@ public class FirstCompression implements CompressionStrategy{
 
         // Logs again
         for (i=0 ; i < compressedInts.length ; i++) {
-            Writter.info_log("\n\t > Paquet [" + i + "]/[" + (compressedInts.length -1) + "]" + "\n\t\t-- " + String.format("%32s", Integer.toBinaryString(compressedInts[i])).replace(' ', '0') + " --");
+            Writter.fine_log("\t > Paquet [" + i + "]/[" + (compressedInts.length -1) + "]" );
+            Writter.finer_log("\t\t-- " + String.format("%32s", Integer.toBinaryString(compressedInts[i])).replace(' ', '0') + " --");
         }
+
+        Writter.info_log("\n\t\t\t[End of Array Compression Using First Compression Method]\n\n\n");
 
         values.setValue(compressedInts);
         values.setMinimalByteSize(minimalCompressedSize);
@@ -71,10 +74,20 @@ public class FirstCompression implements CompressionStrategy{
         compressedInts = values.getValue();
         minimalByteSize = values.getMinimalByteSize();
 
+        // Logs
+        Writter.info_log("\n\n\n\t\t\t[Decompressing Using First Decompressing Method]\n");
+        for(int i=0; i < compressedInts.length ; i++){
+            Writter.fine_log( "\tInteger [" + i + "] = {" + compressedInts[i] + "}");
+            Writter.finer_log("\t\t[" + String.format("%32s", Integer.toBinaryString(compressedInts[i])).replace(' ', '0') + "]");
+        }
+
         int lastBits = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
         if (lastBits == 0) lastBits = 32;
         int totalBits = (compressedInts.length - 1) * 32 + lastBits;
         int Nbvalues = (int) (totalBits / minimalByteSize);
+
+        Writter.info_log("\n\t\t> Total of [" + Nbvalues + "] different values of size {" + minimalByteSize + "} splitted between [" + compressedInts.length + "] Paquets of 32 bytes.");
+        Writter.finer_log("\n\t\t-- Starting Decompression Algorithm --");
 
         int[] ints = new int[Nbvalues];
         int bitPos = 0;
@@ -89,6 +102,13 @@ public class FirstCompression implements CompressionStrategy{
             }
             ints[i] = value;
         }
+
+        // Logs again
+        for (int i=0 ; i < ints.length ; i++) {
+            Writter.fine_log("\t > Paquet [" + i + "]/[" + (ints.length -1) + "]");
+            Writter.finer_log("\t\t-- " + String.format("%32s", Integer.toBinaryString(ints[i])).replace(' ', '0') + " --");
+        }
+        Writter.info_log("\n\t\t\t[End of Array Decompressing Using First Method]\n\n\n");
 
         values.setValue(ints);
         values.setMinimalByteSize(-1);
@@ -109,7 +129,7 @@ public class FirstCompression implements CompressionStrategy{
             bitPos++;
         }
 
-        Writter.fine_log("\nValue compressed at position [" + i + "] = " + value);
+        Writter.fine_log("\n\n\n\t\tValue at position [" + i + "] of Compressed Array = " + value + "\n\n\n");
         return value;
     }
 

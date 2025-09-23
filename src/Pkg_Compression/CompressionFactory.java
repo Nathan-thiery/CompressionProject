@@ -12,10 +12,10 @@ public class CompressionFactory {
                     methods.put(type, new FirstCompression());
                     break;
                 case SECOND :
-
+                    methods.put(type, new SecondCompression());
                     break;
                 case THIRD :
-
+                    methods.put(type, new ThirdCompression());
                     break;
                 default:
                     throw new IllegalArgumentException("Type de compression non supporté: " + type);
