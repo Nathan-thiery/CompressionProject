@@ -22,24 +22,21 @@ public class Main {
 
         // Cas où l'utilisateur appelle le programme sans arguments
         }else{
-            IntegerArray info1 = new IntegerArray(new int[]{1, 2, 3, 4, 5});
-            FirstCompression compress1 = new FirstCompression();
-            compress1.compress(info1);
-            compress1.decompress(info1);
-
-            IntegerArray info2 = new IntegerArray(new int[]{15, 24, 33, 2});
-            compress1.compress(info2);
-            compress1.get(2, info2);
-
             // En utilisant le CompressionFactory :
+
+            // Méthode 1
             IntegerArray info3 = new IntegerArray(new int[]{123, 333, 432, 11123});
             CompressionFactory.getCompression(FIRST).compress(info3);
             CompressionFactory.getCompression(FIRST).get(3, info3);
             CompressionFactory.getCompression(FIRST).decompress(info3);
 
+            // Méthode 2
             CompressionFactory.getCompression(SECOND).compress(info3);
             CompressionFactory.getCompression(SECOND).get(3, info3);
             CompressionFactory.getCompression(SECOND).decompress(info3);
+
+            // Méthode 3
+            CompressionFactory.getCompression(THIRD).compress(info3);
 
         }
 
