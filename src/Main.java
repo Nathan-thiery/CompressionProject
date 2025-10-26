@@ -37,6 +37,10 @@ public class Main {
 
             // Méthode 3
             CompressionFactory.getCompression(THIRD).compress(info3);
+            CompressionFactory.getCompression(THIRD).get(0, info3);
+            CompressionFactory.getCompression(THIRD).get(1, info3);
+            CompressionFactory.getCompression(THIRD).get(2, info3);
+            CompressionFactory.getCompression(THIRD).get(3, info3);
             CompressionFactory.getCompression(THIRD).decompress(info3);
 
         }

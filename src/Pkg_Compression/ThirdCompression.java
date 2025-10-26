@@ -167,7 +167,56 @@ public class ThirdCompression implements CompressionStrategy{
 
     @Override
     public int get(int i, IntegerArray values) {
-        return 0;
+        int minimalByteSize = values.getMinimalByteSize();
+        int[] ints = values.getValue();
+        int value = 0;
+
+
+        int a_size = extractA(minimalByteSize);
+        int b_size = extractB(minimalByteSize);
+        int index_OF = extractIndexOF(minimalByteSize);
+
+        // Parameters for Group A
+        int lastBits_a = 32 - Integer.numberOfLeadingZeros(ints[index_OF-1]);
+        if (lastBits_a == 0) lastBits_a = 32;
+        int totalBits_a = (index_OF-1) * 32 + lastBits_a;
+        int Nbvalues_a = (int) ((totalBits_a - (index_OF-1)* (32%((32/a_size) * a_size))) / a_size);
+
+        // Parameters for Group B
+        int lastBits_b = 32 - Integer.numberOfLeadingZeros(ints[ints.length-1]);
+        if (lastBits_b == 0) lastBits_b = 32;
+        int totalBits_b = (ints.length-1 - index_OF) * 32 + lastBits_b;
+        int Nbvalues_b = (int) ((totalBits_b - (ints.length -1 - index_OF)* (32%((32/b_size) * b_size))) / b_size);
+
+        int bitPos = -1;
+        if(i<=Nbvalues_a-1) {
+            bitPos = i * a_size;
+
+            for (int b = 0; b < a_size; b++) {
+                int index = bitPos / ((32 / a_size) * a_size);
+                int offset = bitPos % ((32 / a_size) * a_size);
+                int bit = (ints[index] >>> offset) & 1;
+                value |= (bit << b);
+                bitPos++;
+            }
+
+        }else if(i <= Nbvalues_a + Nbvalues_b-1){
+            bitPos = (i-Nbvalues_a) * b_size;
+
+            for (int b = 0; b < b_size; b++) {
+                int index = bitPos / ((32 / b_size) * b_size);
+                int offset = bitPos % ((32 / b_size) * b_size);
+                int bit = (ints[index+index_OF] >>> offset) & 1;
+                value |= (bit << b);
+                bitPos++;
+            }
+        }else{
+            Writter.warning_log("\n\ti value out of bounds\n");
+            System. exit(0);
+        }
+
+        Writter.fine_log("\n\n\n\t\tValue at position [" + i + "] of Compressed Array = " + value + "\n\n\n");
+        return value;
     }
 
     // Split the integers in two groups, normal integers and high integers using percentile calculation
