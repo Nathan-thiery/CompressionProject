@@ -67,7 +67,6 @@ public class SecondCompression implements CompressionStrategy{
         int minimalByteSize;
         int i;
 
-        // TODO : Vérifier si l'instanciation des variables agit comme une copie ou comme un lien direct vers l'objet Pkg_Compression.IntegerArray donné en paramètre.
         compressedInts = values.getValue();
         minimalByteSize = values.getMinimalByteSize();
 

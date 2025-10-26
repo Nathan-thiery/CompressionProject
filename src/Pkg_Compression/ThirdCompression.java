@@ -85,13 +85,84 @@ public class ThirdCompression implements CompressionStrategy{
         }
         Writter.info_log("\n\t\t\t[End of Array Compression Using Third Compressing Method]\n\n\n");
 
-        // @TODO : Updating minimalByteSize with a, b and index_OF value
-
+        values.setValue(compressedInts);
+        values.setMinimalByteSize(compressParameters(a_size, b_size, max_a));
     }
 
     @Override
     public void decompress(IntegerArray values) {
-        ;
+        int[] compressedInts;
+        int minimalByteSize;
+        int i;
+
+        compressedInts = values.getValue();
+        minimalByteSize = values.getMinimalByteSize();
+
+        // Logs
+        Writter.info_log("\n\n\n\t\t\t[Decompressing Using Third Decompressing Method]\n");
+        for(i=0; i < compressedInts.length ; i++){
+            Writter.fine_log( "\tInteger [" + i + "] = {" + compressedInts[i] + "}");
+            Writter.finer_log("\t\t[" + String.format("%32s", Integer.toBinaryString(compressedInts[i])).replace(' ', '0') + "]");
+        }
+
+        int a_size = extractA(minimalByteSize);
+        int b_size = extractB(minimalByteSize);
+        int index_OF = extractIndexOF(minimalByteSize);
+
+        // Parameters for Group A
+        int lastBits_a = 32 - Integer.numberOfLeadingZeros(compressedInts[index_OF-1]);
+        if (lastBits_a == 0) lastBits_a = 32;
+        int totalBits_a = (index_OF-1) * 32 + lastBits_a;
+        int Nbvalues_a = (int) ((totalBits_a - (index_OF-1)* (32%((32/a_size) * a_size))) / a_size);
+
+        // Parameters for Group B
+        int lastBits_b = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
+        if (lastBits_b == 0) lastBits_b = 32;
+        int totalBits_b = (compressedInts.length-1 - index_OF) * 32 + lastBits_b;
+        int Nbvalues_b = (int) ((totalBits_b - (compressedInts.length -1 - index_OF)* (32%((32/b_size) * b_size))) / b_size);
+
+        // Logs
+        Writter.info_log("\n\t\t> Group A : Total of [" + Nbvalues_a + "] different values of size {" + a_size + "} splitted between [" + index_OF + "] Paquets of 32 bytes.");
+        Writter.info_log("\t\t> Group B : Total of [" + Nbvalues_b + "] different values of size {" + b_size + "} splitted between [" + (compressedInts.length - index_OF) + "] Paquets of 32 bytes.");
+        Writter.finer_log("\n\t\t-- Starting Decompression Algorithm --");
+
+        int[] ints = new int[Nbvalues_a + Nbvalues_b];
+        int bitPos = 0;
+        for (i = 0; i < Nbvalues_a; i++) {
+            int value = 0;
+            for (int b = 0; b < a_size; b++) {
+                int index = bitPos / ((32 / a_size) * a_size);
+                int offset = bitPos % ((32 / a_size) * a_size);
+                int bit = (compressedInts[index] >>> offset) & 1;
+                value |= (bit << b);
+                bitPos++;
+            }
+            ints[i] = value;
+        }
+
+        bitPos = 0;
+        for (int j = 0; j < Nbvalues_b; j++) {
+            int value = 0;
+            for (int b = 0; b < b_size; b++) {
+                int index = bitPos / ((32 / b_size) * b_size);
+                int offset = bitPos % ((32 / b_size) * b_size);
+                int bit = (compressedInts[index + index_OF] >>> offset) & 1;
+                value |= (bit << b);
+                bitPos++;
+            }
+            ints[j + i] = value;
+        }
+
+        // Logs again
+        for (i=0 ; i < ints.length ; i++) {
+            Writter.fine_log("\t > Paquet [" + i + "]/[" + (ints.length -1) + "]");
+            Writter.finer_log("\t\t-- " + String.format("%32s", Integer.toBinaryString(ints[i])).replace(' ', '0') + " --");
+        }
+        Writter.info_log("\n\t\t\t[End of Array Decompressing Using Second Method]\n\n\n");
+
+
+        values.setValue(ints);
+        values.setMinimalByteSize(0);
     }
 
     @Override
@@ -127,6 +198,26 @@ public class ThirdCompression implements CompressionStrategy{
         }
 
         return new SplitResult(normal, highOutliers);
+    }
+
+    // Compress 3 ints into one, with a & b on 6 bytes, index_OF on 20 bytes.
+    private static int compressParameters(int a, int b, int index_OF){
+        return (a << 26) | (b << 20) | index_OF;
+    }
+
+    // Extract value a from an int with already compressed parameters inside
+    private static int extractA(int compressedParameters) {
+        return (compressedParameters >>> 26) & 0b111111;
+    }
+
+    // Extract value b from an int with already compressed parameters inside
+    private static int extractB(int compressedParameters) {
+        return (compressedParameters >>> 20) & 0b111111;
+    }
+
+    // Extract value index_OF from an int with already compressed parameters inside
+    private static int extractIndexOF(int compressedParameters) {
+        return compressedParameters & 0xFFFFF;
     }
 
     // Calculate a percentile
