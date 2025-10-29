@@ -85,9 +85,9 @@ public class SecondCompression implements CompressionStrategy{
         Writter.info_log("\n\t\t> Total of [" + Nbvalues + "] different values of size {" + minimalByteSize + "} splitted between [" + compressedInts.length + "] Paquets of 32 bytes.");
         Writter.finer_log("\n\t\t-- Starting Decompression Algorithm --");
 
-        int[] ints = new int[Nbvalues];
+        int[] ints = new int[Nbvalues+1];
         int bitPos = 0;
-        for (i = 0; i < Nbvalues; i++) {
+        for (i = 0; i <= Nbvalues; i++) {
             int value = 0;
             for (int b = 0; b < minimalByteSize; b++) {
                 int index = bitPos / ((32 / minimalByteSize) * minimalByteSize);
