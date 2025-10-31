@@ -49,7 +49,7 @@ public class Writter {
     }
 
     public static void file_log(String msg){
-        Path path = Path.of("Benchmarks/FirstMethod_Numbers6.txt");
+        Path path = Path.of("Benchmarks/By size/ThirdMethod_AllNumbers.txt");
         List<String> lines = List.of(msg);
         try {
             Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.APPEND);

@@ -26,12 +26,12 @@ public class Main {
                 return;
             }
 
-            int mode = -1;
+            //int mode = -1;
             //int size = -1;
             int compression_mode = -1;
             Random rand = new Random();
             try {
-                mode = Integer.parseInt(args[0]);
+                //mode = Integer.parseInt(args[0]);
                 //size = Integer.parseInt(args[1]);
                 compression_mode = Integer.parseInt(args[2]);
 
@@ -40,52 +40,56 @@ public class Main {
                 System.exit(1);
             }
 
-            // TODO : Placer une boucle incrémentale sur la size du tableau
-            // Valeurs = 10 - 50 - 100 - 250 - 500 - 800 - 1 000
+            int[] modes = {1, 2, 3, 4, 5, 6};
             int[] sizes = {10, 50, 100, 250, 500, 800, 1000, 5000, 10000};
-            for (int size : sizes) {
-                for (int repetitions = 0; repetitions <10 ; repetitions++){
+            for(int mode : modes){
+                for (int size : sizes) {
+                    for (int repetitions = 0; repetitions < 10; repetitions++) {
 
-                    // Création du tableau selon le mode choisi
-                    int[] tableau = creerTableau(mode, size);
+                        // Création du tableau selon le mode choisi
+                        Random newRand = new Random(System.nanoTime());
+                        int[] tableau = creerTableau(mode, size, newRand);
 
-                    switch (compression_mode) {
-                        case 1:
-                            long start = System.nanoTime();
-                            IntegerArray RandomIntsData1 = new IntegerArray(tableau);
-                            CompressionFactory.getCompression(FIRST).compress(RandomIntsData1);
-                            //CompressionFactory.getCompression(FIRST).get(rand.nextInt(size), RandomIntsData1);
-                            CompressionFactory.getCompression(FIRST).decompress(RandomIntsData1);
-                            long end = System.nanoTime();
-                            long timer = (end - start);
-                            Writter.file_log(compression_mode + " " + mode + " " + size + " " + (timer / 1000000.0));
-                            break;
-                        case 2:
-                            long start2 = System.nanoTime();
-                            IntegerArray RandomIntsData2 = new IntegerArray(tableau);
-                            CompressionFactory.getCompression(SECOND).compress(RandomIntsData2);
-                            //CompressionFactory.getCompression(SECOND).get(rand.nextInt(size), RandomIntsData2);
-                            CompressionFactory.getCompression(SECOND).decompress(RandomIntsData2);
-                            long end2 = System.nanoTime();
-                            long timer2 = (end2 - start2);
-                            Writter.file_log(compression_mode + " " + mode + " " + size + " " + (timer2 / 1000000.0));
-                            break;
-                        case 3:
-                            long start3 = System.nanoTime();
-                            IntegerArray RandomIntsData3 = new IntegerArray(tableau);
-                            CompressionFactory.getCompression(THIRD).compress(RandomIntsData3);
-                            //CompressionFactory.getCompression(THIRD).get(rand.nextInt(size), RandomIntsData3);
-                            CompressionFactory.getCompression(THIRD).decompress(RandomIntsData3);
-                            long end3 = System.nanoTime();
-                            long timer3 = (end3 - start3);
-                            Writter.file_log(compression_mode + " " + mode + " " + size + " " + (timer3 / 1000000.0));
-                            break;
-                        default:
-                            Writter.warning_log("Value given for arg3 is wrong.\nExpected value between 1 and 3.\n");
-                            System.exit(1);
+                        switch (compression_mode) {
+                            case 1:
+                                //long start = System.nanoTime();
+                                IntegerArray RandomIntsData1 = new IntegerArray(tableau);
+                                CompressionFactory.getCompression(FIRST).compress(RandomIntsData1);
+                                int compressedSize = RandomIntsData1.getValue().length;
+                                //CompressionFactory.getCompression(FIRST).get(rand.nextInt(size), RandomIntsData1);
+                                CompressionFactory.getCompression(FIRST).decompress(RandomIntsData1);
+                                //long end = System.nanoTime();
+                                //long timer = (end - start);
+                                Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize);
+                                break;
+                            case 2:
+                                //long start2 = System.nanoTime();
+                                IntegerArray RandomIntsData2 = new IntegerArray(tableau);
+                                CompressionFactory.getCompression(SECOND).compress(RandomIntsData2);
+                                int compressedSize2 = RandomIntsData2.getValue().length;
+                                //CompressionFactory.getCompression(SECOND).get(rand.nextInt(size), RandomIntsData2);
+                                CompressionFactory.getCompression(SECOND).decompress(RandomIntsData2);
+                                //long end2 = System.nanoTime();
+                                //long timer2 = (end2 - start2);
+                                Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize2);
+                                break;
+                            case 3:
+                                //long start3 = System.nanoTime();
+                                IntegerArray RandomIntsData3 = new IntegerArray(tableau);
+                                CompressionFactory.getCompression(THIRD).compress(RandomIntsData3);
+                                int compressedSize3 = RandomIntsData3.getValue().length;
+                                //CompressionFactory.getCompression(THIRD).get(rand.nextInt(size), RandomIntsData3);
+                                CompressionFactory.getCompression(THIRD).decompress(RandomIntsData3);
+                                //long end3 = System.nanoTime();
+                                //long timer3 = (end3 - start3);
+                                Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize3);
+                                break;
+                            default:
+                                Writter.warning_log("Value given for arg3 is wrong.\nExpected value between 1 and 3.\n");
+                                System.exit(1);
+                        }
                     }
                 }
-
             } // Fin de la boucle avec les différentes Sizes
 
         // Cas où l'utilisateur appelle le programme sans arguments
@@ -112,9 +116,9 @@ public class Main {
 
     }
 
-    public static int[] creerTableau(int mode, int taille) {
+    public static int[] creerTableau(int mode, int taille, Random rand) {
         int[] tableau = new int[taille];
-        Random rand = new Random();
+
 
         switch (mode) {
             case 1:
