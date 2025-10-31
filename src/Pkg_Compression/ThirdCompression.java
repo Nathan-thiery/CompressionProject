@@ -24,7 +24,7 @@ public class ThirdCompression implements CompressionStrategy{
 
         // Splitting normal and high values
         Writter.finest_log("\n\t\t\t-- Splitting list between normal and high integers .... --");
-        SplitResult splitInts = separateNormalFromHighIntegers(ints);
+        SplitResult splitInts = splitByBitWidthPFOR(ints, 0.8);
 
         // Calculating Compression parameters
         Writter.finest_log("\t\t\t-- Caculating compression parameters .... --\n");
@@ -53,7 +53,6 @@ public class ThirdCompression implements CompressionStrategy{
             Writter.finer_log("\t\tIntegers in group B : ");
             Writter.finer_log("\t\t" + splitInts.highOutliers.toString());
 
-            // @TODO : Compressing both lists into an int[]
             int[] compressedInts = new int[arraySize];
 
             Writter.finest_log("\n\t\t\tCompressing Group A values");
@@ -119,18 +118,23 @@ public class ThirdCompression implements CompressionStrategy{
         int b_size = extractB(minimalByteSize);
         int index_OF = extractIndexOF(minimalByteSize);
 
+
         // Parameters for Group A
         int lastBits_a = 32 - Integer.numberOfLeadingZeros(compressedInts[index_OF-1]);
         if (lastBits_a == 0) lastBits_a = 32;
-        int totalBits_a = (index_OF-1) * 32 + lastBits_a;
-        int Nbvalues_a = (int) ((totalBits_a - (index_OF-1)* (32%((32/a_size) * a_size))) / a_size);
-
+        // int totalBits_a = (index_OF-1) * 32 + lastBits_a;
+        int Nbvalues_a = (32/a_size)*(index_OF-1) + Math.ceilDiv(lastBits_a,a_size);
+        Writter.config_log("Nombre de valeurs de 0 à (index_OF - 2) <=> 0 à " + (index_OF-2) + " = " + ((32/a_size)*(index_OF-1)));
+        Writter.config_log("Nombre de valeurs dans la dernière case du groupe A <=> " + (index_OF - 1) + " = " + Math.ceilDiv(lastBits_a,a_size));
         // Parameters for Group B
         int lastBits_b = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
         if (lastBits_b == 0) lastBits_b = 32;
-        int totalBits_b = (compressedInts.length-1 - index_OF) * 32 + lastBits_b;
-        int Nbvalues_b = (int) ((totalBits_b - (compressedInts.length -1 - index_OF)* (32%((32/b_size) * b_size))) / b_size);
+        // int totalBits_b = (compressedInts.length-1 - (index_OF-1)) * 32 + lastBits_b;
+        int Nbvalues_b = (32/b_size)*((compressedInts.length-1) - index_OF) + Math.ceilDiv(lastBits_b , b_size);
+        Writter.config_log("Nombre de valeurs de Index_OF à (tab.length-2) <=> " + index_OF + " a "+ (compressedInts.length-2) + " = " + ((32/b_size)*((compressedInts.length -1)- index_OF)));
+        Writter.config_log("Nombre de valeurs dans la dernière case du groupe B <=> " + (compressedInts.length-1) + " = " + Math.ceilDiv(lastBits_b,b_size));
 
+        // TODO : Fix length pb
         // Logs
         Writter.info_log("\n\t\t> Group A : Total of [" + Nbvalues_a + "] different values of size {" + a_size + "} splitted between [" + index_OF + "] Paquets of 32 bytes.");
         Writter.info_log("\t\t> Group B : Total of [" + Nbvalues_b + "] different values of size {" + b_size + "} splitted between [" + (compressedInts.length - index_OF) + "] Paquets of 32 bytes.");
@@ -232,6 +236,7 @@ public class ThirdCompression implements CompressionStrategy{
     // Split the integers in two groups, normal integers and high integers using percentile calculation
     private static SplitResult separateNormalFromHighIntegers(int[] ints){
         // @TODO : Améliorer l'algorithme de différenciation de l'appartenance à une liste ou à une autre
+        // @TODO : Méthodes possibles : PFOR -> Patched Frame-of-Reference
         List<Integer> listValues = new ArrayList<>();
         for (int v : ints) listValues.add(v);
         Collections.sort(listValues);
@@ -256,6 +261,44 @@ public class ThirdCompression implements CompressionStrategy{
                 normal.add(v);
             }
         }
+
+        return new SplitResult(normal, highOutliers);
+    }
+
+    public static SplitResult splitByBitWidthPFOR(int[] values, double percentile) {
+        if (values == null || values.length == 0)
+            return new SplitResult(Collections.emptyList(), Collections.emptyList());
+
+        int n = values.length;
+        int[] bitWidths = new int[n];
+
+        // 1️⃣ Calcul du nombre de bits nécessaires pour chaque entier
+        for (int i = 0; i < n; i++) {
+            int v = Math.abs(values[i]); // gestion des négatifs (même bitwidth que valeur absolue)
+            bitWidths[i] = (v == 0) ? 1 : (32 - Integer.numberOfLeadingZeros(v));
+        }
+
+        // 2️⃣ Détermination du seuil de bits (par percentile)
+        int[] sortedBits = bitWidths.clone();
+        Arrays.sort(sortedBits);
+        int cutoffIndex = (int) Math.floor(percentile * (n - 1));
+        int bitThreshold = sortedBits[cutoffIndex];
+
+        // 3️⃣ Séparation selon le nombre de bits nécessaires
+        List<Integer> normal = new ArrayList<>();
+        List<Integer> highOutliers = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            if (bitWidths[i] <= bitThreshold)
+                normal.add(values[i]);
+            else
+                highOutliers.add(values[i]);
+        }
+
+        System.out.printf(
+                "PFOR split (by bit width): threshold = %d bits, normals = %d, outliers = %d%n",
+                bitThreshold, normal.size(), highOutliers.size()
+        );
 
         return new SplitResult(normal, highOutliers);
     }
