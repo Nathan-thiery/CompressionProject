@@ -48,37 +48,22 @@ public class Main {
 
             switch (compression_mode) {
                 case 1:
-                    //long start = System.nanoTime();
                     IntegerArray RandomIntsData1 = new IntegerArray(tableau);
                     CompressionFactory.getCompression(FIRST).compress(RandomIntsData1);
-                    int compressedSize = RandomIntsData1.getValue().length;
-                    //CompressionFactory.getCompression(FIRST).get(rand.nextInt(size), RandomIntsData1);
+                    CompressionFactory.getCompression(FIRST).get(rand.nextInt(size), RandomIntsData1);
                     CompressionFactory.getCompression(FIRST).decompress(RandomIntsData1);
-                    //long end = System.nanoTime();
-                    //long timer = (end - start);
-                    Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize);
                     break;
                 case 2:
-                    //long start2 = System.nanoTime();
                     IntegerArray RandomIntsData2 = new IntegerArray(tableau);
                     CompressionFactory.getCompression(SECOND).compress(RandomIntsData2);
-                    int compressedSize2 = RandomIntsData2.getValue().length;
-                    //CompressionFactory.getCompression(SECOND).get(rand.nextInt(size), RandomIntsData2);
+                    CompressionFactory.getCompression(SECOND).get(rand.nextInt(size), RandomIntsData2);
                     CompressionFactory.getCompression(SECOND).decompress(RandomIntsData2);
-                    //long end2 = System.nanoTime();
-                    //long timer2 = (end2 - start2);
-                    Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize2);
                     break;
                 case 3:
-                    //long start3 = System.nanoTime();
                     IntegerArray RandomIntsData3 = new IntegerArray(tableau);
                     CompressionFactory.getCompression(THIRD).compress(RandomIntsData3);
-                    int compressedSize3 = RandomIntsData3.getValue().length;
-                    //CompressionFactory.getCompression(THIRD).get(rand.nextInt(size), RandomIntsData3);
+                    CompressionFactory.getCompression(THIRD).get(rand.nextInt(size), RandomIntsData3);
                     CompressionFactory.getCompression(THIRD).decompress(RandomIntsData3);
-                    //long end3 = System.nanoTime();
-                    //long timer3 = (end3 - start3);
-                    Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressedSize3);
                     break;
                 default:
                     Writter.warning_log("Value given for arg3 is wrong.\nExpected value between 1 and 3.\n");
