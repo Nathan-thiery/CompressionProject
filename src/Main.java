@@ -84,7 +84,7 @@ public class Main {
             // En utilisant le CompressionFactory :
 
             // Méthode 1
-            IntegerArray info3 = new IntegerArray(new int[]{123, 333, 432, 11123});
+            IntegerArray info3 = new IntegerArray(new int[]{12, 20, 10000, 1123});
             CompressionFactory.getCompression(FIRST).compress(info3);
             CompressionFactory.getCompression(FIRST).get(3, info3);
             CompressionFactory.getCompression(FIRST).decompress(info3);
@@ -155,7 +155,7 @@ public class Main {
             case 6:
                 // % aléatoire de chance pour 0-100 vs 100_000-10_000_000
                 double probaPetiteValeur = rand.nextDouble();
-                System.out.printf("Probabilité pour valeurs entre 0 et 100 : %.2f%%%n", probaPetiteValeur * 100);
+                Writter.config_log("Probabilité pour valeurs entre 0 et 100 : " + (probaPetiteValeur * 100));
                 for (int i = 0; i < taille; i++) {
                     if (rand.nextDouble() < probaPetiteValeur)
                         tableau[i] = rand.nextInt(101);
@@ -165,7 +165,7 @@ public class Main {
                 break;
 
             default:
-                System.out.println("Mode invalide. Choisissez un mode entre 1 et 6.");
+                Writter.warning_log("Mode invalide. Choisissez un mode entre 1 et 6.");
                 System.exit(1);
         }
 

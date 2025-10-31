@@ -35,9 +35,6 @@ public class SecondCompression implements CompressionStrategy{
         // Allocation of CompressedInts Array
         int[] compressedInts = new int[lastNbBitSet];
 
-        // TODO : Changer la compression ( [32 / minimalCompressedSize] val par paquet de 32 bits.)
-        // Remplissage des 0 en 32 % ((32/minimalCompressedSize) * minimalCompressedSize)
-
         // Compression
         int bitPos = 0;
         for (int val : ints) {

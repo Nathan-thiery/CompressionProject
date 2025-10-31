@@ -8,7 +8,6 @@ import java.nio.file.Path;
 
 
 enum ANSI{
-    // Codes Pkg_Logger.ANSI
     RESET("\u001B[0m"),
     ROUGE("\u001B[31m"),             // rouge
     ORANGE("\u001B[38;5;208m"),      // orange

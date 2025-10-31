@@ -92,7 +92,6 @@ public class ThirdCompression implements CompressionStrategy{
             values.setValue(compressedInts);
             values.setMinimalByteSize(compressParameters(a_size, b_size, max_a));
         }else{
-            // @TODO : Gérer cas ou une des deux listes est vide
             Writter.warning_log("Failure to split datas in two groups based on their values : \n\tTable with 'Normal' integers of size [" + splitInts.normal.size() + "]\n\tTable with 'High outliers' integers of size [" + splitInts.highOutliers.size() + "]");
             System.exit(1);
         }
@@ -134,7 +133,6 @@ public class ThirdCompression implements CompressionStrategy{
         Writter.config_log("Nombre de valeurs de Index_OF à (tab.length-2) <=> " + index_OF + " a "+ (compressedInts.length-2) + " = " + ((32/b_size)*((compressedInts.length -1)- index_OF)));
         Writter.config_log("Nombre de valeurs dans la dernière case du groupe B <=> " + (compressedInts.length-1) + " = " + (int) Math.ceil((double) lastBits_b / b_size));
 
-        // TODO : Fix length pb
         // Logs
         Writter.info_log("\n\t\t> Group A : Total of [" + Nbvalues_a + "] different values of size {" + a_size + "} splitted between [" + index_OF + "] Paquets of 32 bytes.");
         Writter.info_log("\t\t> Group B : Total of [" + Nbvalues_b + "] different values of size {" + b_size + "} splitted between [" + (compressedInts.length - index_OF) + "] Paquets of 32 bytes.");
@@ -233,38 +231,6 @@ public class ThirdCompression implements CompressionStrategy{
         return value;
     }
 
-    // Split the integers in two groups, normal integers and high integers using percentile calculation
-    private static SplitResult separateNormalFromHighIntegers(int[] ints){
-        // @TODO : Améliorer l'algorithme de différenciation de l'appartenance à une liste ou à une autre
-        // @TODO : Méthodes possibles : PFOR -> Patched Frame-of-Reference
-        List<Integer> listValues = new ArrayList<>();
-        for (int v : ints) listValues.add(v);
-        Collections.sort(listValues);
-
-        // Quartiles calculation
-        double q1 = getPercentile(listValues, 25);
-        double q3 = getPercentile(listValues, 75);
-        double iqr = q3 - q1;
-
-        // Threshold separating normal from high numbers
-        double upperBound = q3 + 1.5 * iqr;
-
-        List<Integer> normal = new ArrayList<>();
-        List<Integer> highOutliers = new ArrayList<>();
-
-        // Splitting values in both Lists depending on the threshold
-        for (int v : ints) {
-            if (v > upperBound) {
-                highOutliers.add(v);
-            } else {
-                // Both low and normal numbers
-                normal.add(v);
-            }
-        }
-
-        return new SplitResult(normal, highOutliers);
-    }
-
     public static SplitResult splitByBitWidthPFOR(int[] values, double percentile) {
         if (values == null || values.length == 0)
             return new SplitResult(Collections.emptyList(), Collections.emptyList());
@@ -323,19 +289,6 @@ public class ThirdCompression implements CompressionStrategy{
     // Extract value index_OF from an int with already compressed parameters inside
     private static int extractIndexOF(int compressedParameters) {
         return compressedParameters & 0xFFFFF;
-    }
-
-    // Calculate a percentile
-    private static double getPercentile(List<Integer> sortedValues, double percentile) {
-        if (sortedValues.isEmpty()) return 0;
-        int n = sortedValues.size();
-        double index = (percentile / 100.0) * (n - 1);
-        int lower = (int) Math.floor(index);
-        int upper = (int) Math.ceil(index);
-        if (lower == upper) {
-            return sortedValues.get(lower);
-        }
-        return sortedValues.get(lower) + (index - lower) * (sortedValues.get(upper) - sortedValues.get(lower));
     }
 
 }

@@ -70,7 +70,6 @@ public class FirstCompression implements CompressionStrategy{
         int[] compressedInts;
         int minimalByteSize;
 
-        // TODO : Vérifier si l'instanciation des variables agit comme une copie ou comme un lien direct vers l'objet Pkg_Compression.IntegerArray donné en paramètre.
         compressedInts = values.getValue();
         minimalByteSize = values.getMinimalByteSize();
 
@@ -84,14 +83,14 @@ public class FirstCompression implements CompressionStrategy{
         int lastBits = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
         if (lastBits == 0) lastBits = 32;
         int totalBits = (compressedInts.length - 1) * 32 + lastBits;
-        int Nbvalues = (int) (totalBits / minimalByteSize);
+        int Nbvalues = (int) Math.ceil((double)(totalBits/minimalByteSize));
 
         Writter.info_log("\n\t\t> Total of [" + Nbvalues + "] different values of size {" + minimalByteSize + "} splitted between [" + compressedInts.length + "] Paquets of 32 bytes.");
         Writter.finer_log("\n\t\t-- Starting Decompression Algorithm --");
 
-        int[] ints = new int[Nbvalues];
+        int[] ints = new int[Nbvalues+1];
         int bitPos = 0;
-        for (int i = 0; i < Nbvalues; i++) {
+        for (int i = 0; i <= Nbvalues; i++) {
             int value = 0;
             for (int b = 0; b < minimalByteSize; b++) {
                 int index = bitPos / 32;
