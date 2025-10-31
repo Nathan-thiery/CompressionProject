@@ -14,15 +14,23 @@ public class Main {
         if(args.length > 0){
 
             if (args.length != 3) {
-                Writter.config_log("Usage : java Main <mode : integer> <size : integer> <compression_mode : integer>");
-                Writter.config_log("\n\tmode [1] :\n\t\t> Generate random integers between 0 and 100 in a table of length 'size'.");
-                Writter.config_log("\n\tmode [2] :\n\t\t> Generate random integers between 100 000 and 10 000 000 in a table of length 'size'.");
-                Writter.config_log("\n\tmode [3] :\n\t\t> Generate a table of integers of length 'size' with a : \n\t\t\t95% probability of a random integer between 0 and 100\n\t\t\t5% probability of a random integer between 100 000 and 10 000 000.");
-                Writter.config_log("\n\tmode [4] :\n\t\t> Generate a table of integers of length 'size' with a : \n\t\t\t5% probability of a random integer between 0 and 100\n\t\t\t95% probability of a random integer between 100 000 and 10 000 000.");
-                Writter.config_log("\n\tmode [5] :\n\t\t> Generate random integers between 0 and 10 000 000 in a table of length 'size'.");
-                Writter.config_log("\n\tmode [6] :\n\t\t> Generate a table of integers of length 'size' which compute a random probability to generate integers between 0 and 100 and the rest of the probability to generate integers between 100 000 and 10 000 000.");
-                Writter.config_log("In any cases, compresses it with the compression mode number 'compression_mode'");
-                Writter.config_log("\nValues : \n\tmode [1;6]\n\tsize[>=1]\n\tcompression_mode[1;3]");
+                Writter.info_log("Usage : java Main <mode> <size> <compression_mode>");
+                Writter.info_log("\n\tmode [INTEGER] -> Between 1 and 6, explained below.");
+                Writter.info_log("\tsize [INTEGER] -> Greater than 2");
+                Writter.info_log("\tcompression_mode [INTEGER] -> Between 1 and 3, explained below.");
+
+                Writter.info_log("\n\n\n\tmode : Integer representing the way of generating randomly integers in the array.\n\tIn total, 6 different ways :");
+                Writter.config_log("\n\t\tmode [1] :\n\t\t\t> Generate random integers between 0 and 100 in a table of length 'size'.");
+                Writter.config_log("\n\t\tmode [2] :\n\t\t\t> Generate random integers between 100 000 and 10 000 000 in a table of length 'size'.");
+                Writter.config_log("\n\t\tmode [3] :\n\t\t\t> Generate a table of integers of length 'size' with a : \n\t\t\t\t95% probability of a random integer between 0 and 100\n\t\t\t\t5% probability of a random integer between 100 000 and 10 000 000.");
+                Writter.config_log("\n\t\tmode [4] :\n\t\t\t> Generate a table of integers of length 'size' with a : \n\t\t\t\t5% probability of a random integer between 0 and 100\n\t\t\t\t95% probability of a random integer between 100 000 and 10 000 000.");
+                Writter.config_log("\n\t\tmode [5] :\n\t\t\t> Generate random integers between 0 and 10 000 000 in a table of length 'size'.");
+                Writter.config_log("\n\t\tmode [6] :\n\t\t\t> Generate a table of integers of length 'size' which compute a random probability to generate integers between 0 and 100 and the rest of the probability to generate integers between 100 000 and 10 000 000.");
+
+                Writter.info_log("\n\n\n\tcompression_mode : Integer representing which compression / decompression algorithm will be used.\n\tIn total, 3 different compression algorithms : ");
+                Writter.config_log("\n\t\tFirst compression type : compression_mode[1]\n\t\t\t> Can write compressed integers on two consecutive integers");
+                Writter.config_log("\n\t\tSecond compression type : compression_mode[2]\n\t\t\t> Do not write compressed integers on two consecutive integers");
+                Writter.config_log("\n\t\tThird compression type : compression_mode[3]\n\t\t\t> Compression with overflow areas");
                 return;
             }
 
@@ -91,6 +99,9 @@ public class Main {
             CompressionFactory.getCompression(THIRD).get(0, info3);
             CompressionFactory.getCompression(THIRD).decompress(info3);
 
+
+            Writter.info_log("Default execution terminated.");
+            Writter.info_log("If you wish to run the program with arguments, use -h to learn about them.");
         }
 
     }
