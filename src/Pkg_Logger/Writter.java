@@ -1,16 +1,21 @@
 package Pkg_Logger;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.nio.file.Path;
 
 
 
 enum ANSI{
     // Codes Pkg_Logger.ANSI
     RESET("\u001B[0m"),
-    ROUGE("\u001B[31m"),             // rouge de base
-    ORANGE("\u001B[38;5;208m"),      // orange (palette 256 couleurs)
-    VIOLET("\u001B[35m"),            // violet/magenta
-    BLEU_CLAIR("\u001B[94m"),        // bleu clair (bright blue)
+    ROUGE("\u001B[31m"),             // rouge
+    ORANGE("\u001B[38;5;208m"),      // orange
+    VIOLET("\u001B[35m"),            // violet
+    BLEU_CLAIR("\u001B[94m"),        // bleu clair
     BLEU_FONCE("\u001B[34m"),        // bleu foncé
-    VERT_CLAIR("\u001B[92m"),        // vert clair (bright green)
+    VERT_CLAIR("\u001B[92m"),        // vert clair
     VERT_FONCE("\u001B[32m");        // vert foncé
 
     private final String color;
@@ -43,6 +48,15 @@ public class Writter {
         }
     }
 
+    public static void file_log(String msg){
+        Path path = Path.of("Benchmarks/FirstMethod_Numbers6.txt");
+        List<String> lines = List.of(msg);
+        try {
+            Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void severe_log(String msg){log(LogLevel.SEVERE, ANSI.ROUGE + msg + ANSI.RESET);}
     public static void warning_log(String msg){log(LogLevel.WARNING,ANSI.ORANGE + msg + ANSI.RESET);}
     public static void info_log(String msg){log(LogLevel.INFO, ANSI.VIOLET + msg + ANSI.RESET);}

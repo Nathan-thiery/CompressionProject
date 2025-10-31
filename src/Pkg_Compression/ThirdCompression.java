@@ -272,19 +272,18 @@ public class ThirdCompression implements CompressionStrategy{
         int n = values.length;
         int[] bitWidths = new int[n];
 
-        // 1️⃣ Calcul du nombre de bits nécessaires pour chaque entier
+        // nombre de bits nécessaires pour chaque entier
         for (int i = 0; i < n; i++) {
             int v = Math.abs(values[i]); // gestion des négatifs (même bitwidth que valeur absolue)
             bitWidths[i] = (v == 0) ? 1 : (32 - Integer.numberOfLeadingZeros(v));
         }
 
-        // 2️⃣ Détermination du seuil de bits (par percentile)
+        // Sseuil de bits
         int[] sortedBits = bitWidths.clone();
         Arrays.sort(sortedBits);
         int cutoffIndex = (int) Math.floor(percentile * (n - 1));
         int bitThreshold = sortedBits[cutoffIndex];
 
-        // 3️⃣ Séparation selon le nombre de bits nécessaires
         List<Integer> normal = new ArrayList<>();
         List<Integer> highOutliers = new ArrayList<>();
 
@@ -295,10 +294,13 @@ public class ThirdCompression implements CompressionStrategy{
                 highOutliers.add(values[i]);
         }
 
-        System.out.printf(
-                "PFOR split (by bit width): threshold = %d bits, normals = %d, outliers = %d%n",
-                bitThreshold, normal.size(), highOutliers.size()
-        );
+        if (normal.isEmpty()) {
+            normal.add(highOutliers.remove(0));
+        } else if (highOutliers.isEmpty()) {
+            highOutliers.add(normal.remove(normal.size() - 1));
+        }
+
+        Writter.fine_log("PFOR split (by bit width): threshold = " + bitThreshold + " bits, normals = " + normal.size() + ", outliers = " + highOutliers.size());
 
         return new SplitResult(normal, highOutliers);
     }
