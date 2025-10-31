@@ -8,7 +8,7 @@ import static Pkg_Compression.CompressionLevel.*;
 public class Main {
 
     public static void main(String args[]){
-        Writter.setCurrent_Log_Level(LogLevel.INFO);
+        Writter.setCurrent_Log_Level(LogLevel.FINEST);
 
         // Cas où l'utilisateur entre ses propres entiers
         if(args.length > 0){

@@ -80,7 +80,7 @@ public class SecondCompression implements CompressionStrategy{
         int lastBits = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
         if (lastBits == 0) lastBits = 32;
         //int totalBits = (compressedInts.length - 1) * 32 + lastBits;
-        int Nbvalues = (32/minimalByteSize) * (compressedInts.length-1) + Math.ceilDiv(lastBits, minimalByteSize);
+        int Nbvalues = (32/minimalByteSize) * (compressedInts.length-1) + (int) Math.ceil((double) lastBits / minimalByteSize);
 
         Writter.info_log("\n\t\t> Total of [" + Nbvalues + "] different values of size {" + minimalByteSize + "} splitted between [" + compressedInts.length + "] Paquets of 32 bytes.");
         Writter.finer_log("\n\t\t-- Starting Decompression Algorithm --");

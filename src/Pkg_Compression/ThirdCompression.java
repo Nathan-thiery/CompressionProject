@@ -123,16 +123,16 @@ public class ThirdCompression implements CompressionStrategy{
         int lastBits_a = 32 - Integer.numberOfLeadingZeros(compressedInts[index_OF-1]);
         if (lastBits_a == 0) lastBits_a = 32;
         // int totalBits_a = (index_OF-1) * 32 + lastBits_a;
-        int Nbvalues_a = (32/a_size)*(index_OF-1) + Math.ceilDiv(lastBits_a,a_size);
+        int Nbvalues_a = (32/a_size)*(index_OF-1) + (int) Math.ceil((double) lastBits_a / a_size);
         Writter.config_log("Nombre de valeurs de 0 à (index_OF - 2) <=> 0 à " + (index_OF-2) + " = " + ((32/a_size)*(index_OF-1)));
-        Writter.config_log("Nombre de valeurs dans la dernière case du groupe A <=> " + (index_OF - 1) + " = " + Math.ceilDiv(lastBits_a,a_size));
+        Writter.config_log("Nombre de valeurs dans la dernière case du groupe A <=> " + (index_OF - 1) + " = " + (int) Math.ceil((double) lastBits_a / a_size));
         // Parameters for Group B
         int lastBits_b = 32 - Integer.numberOfLeadingZeros(compressedInts[compressedInts.length-1]);
         if (lastBits_b == 0) lastBits_b = 32;
         // int totalBits_b = (compressedInts.length-1 - (index_OF-1)) * 32 + lastBits_b;
-        int Nbvalues_b = (32/b_size)*((compressedInts.length-1) - index_OF) + Math.ceilDiv(lastBits_b , b_size);
+        int Nbvalues_b = (32/b_size)*((compressedInts.length-1) - index_OF) + (int) Math.ceil((double) lastBits_b / b_size);
         Writter.config_log("Nombre de valeurs de Index_OF à (tab.length-2) <=> " + index_OF + " a "+ (compressedInts.length-2) + " = " + ((32/b_size)*((compressedInts.length -1)- index_OF)));
-        Writter.config_log("Nombre de valeurs dans la dernière case du groupe B <=> " + (compressedInts.length-1) + " = " + Math.ceilDiv(lastBits_b,b_size));
+        Writter.config_log("Nombre de valeurs dans la dernière case du groupe B <=> " + (compressedInts.length-1) + " = " + (int) Math.ceil((double) lastBits_b / b_size));
 
         // TODO : Fix length pb
         // Logs
