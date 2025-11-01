@@ -1,3 +1,6 @@
+# Auteur : 
+Nathan THIERY, étudiant M1 Informatique Université Côte d'Azur, parcours Alternance.
+
 # Prérequis
 - Java JDK 8 ou supérieur
 
