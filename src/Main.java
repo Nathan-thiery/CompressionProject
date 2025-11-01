@@ -49,17 +49,20 @@ public class Main {
             }
 
 
-
             // Création du tableau selon le mode choisi
             Random newRand = new Random(System.nanoTime());
             int[] tableau = creerTableau(mode, size, newRand);
 
             switch (compression_mode) {
                 case 1:
+                    long start = System.nanoTime();
                     IntegerArray RandomIntsData1 = new IntegerArray(tableau);
                     CompressionFactory.getCompression(FIRST).compress(RandomIntsData1);
+                    int compressed_size = RandomIntsData1.getValue().length;
                     CompressionFactory.getCompression(FIRST).get(rand.nextInt(size), RandomIntsData1);
                     CompressionFactory.getCompression(FIRST).decompress(RandomIntsData1);
+                    long end = System.nanoTime();
+                    Writter.file_log(compression_mode + " " + mode + " " + size + " " + compressed_size);
                     break;
                 case 2:
                     IntegerArray RandomIntsData2 = new IntegerArray(tableau);
