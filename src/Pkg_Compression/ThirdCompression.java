@@ -240,7 +240,7 @@ public class ThirdCompression implements CompressionStrategy{
 
         // nombre de bits nécessaires pour chaque entier
         for (int i = 0; i < n; i++) {
-            int v = Math.abs(values[i]); // gestion des négatifs (même bitwidth que valeur absolue)
+            int v = Math.abs(values[i]); 
             bitWidths[i] = (v == 0) ? 1 : (32 - Integer.numberOfLeadingZeros(v));
         }
 
